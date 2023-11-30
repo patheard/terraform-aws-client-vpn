@@ -31,4 +31,4 @@ override.tf.json
 terraform.rc
 
 # IdP metadata
-terraform/metadata
+terraform/metadata/*.xml
