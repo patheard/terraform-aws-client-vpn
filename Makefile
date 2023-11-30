@@ -1,4 +1,12 @@
+apply:
+	cd terraform &&\
+	terraform apply
+
 fmt:
 	terraform fmt -recursive
 
-.PHONY: fmt
+plan:
+	cd terraform &&\
+	terraform plan
+
+.PHONY: apply fmt plan
