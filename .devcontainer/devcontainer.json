@@ -1,5 +1,5 @@
 {
-	"name": "terraform-client-vpn",
+	"name": "terraform-aws-client-vpn",
 	"image": "mcr.microsoft.com/vscode/devcontainers/base:buster",
 	"containerEnv": {
 		"SHELL": "/bin/zsh"
