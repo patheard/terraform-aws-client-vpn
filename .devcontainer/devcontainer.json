@@ -1,0 +1,27 @@
+{
+	"name": "terraform-client-vpn",
+	"image": "mcr.microsoft.com/vscode/devcontainers/base:buster",
+	"containerEnv": {
+		"SHELL": "/bin/zsh"
+	},
+	"features": {
+		"aws-cli": {
+			"version": "latest"
+		},
+		"terraform": {
+			"version": "1.6.5",
+			"tflint": "none"
+		},		
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"HashiCorp.HCL",
+				"hashicorp.terraform",
+				"github.copilot",
+				"github.vscode-github-actions"
+			]
+		}
+	},
+	"remoteUser": "vscode"
+}
