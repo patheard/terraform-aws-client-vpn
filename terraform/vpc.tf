@@ -1,6 +1,6 @@
-module "test_vpn_vpc" {
-  source = "github.com/cds-snc/terraform-modules//vpc?ref=v7.3.2"
-  name   = "test-vpn-vpc"
+module "test_vpc" {
+  source = "github.com/cds-snc/terraform-modules//vpc?ref=v7.3.4"
+  name   = "test-vpc"
 
   high_availability  = true
   enable_flow_log    = true

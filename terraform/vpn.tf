@@ -1,6 +1,6 @@
 resource "aws_ec2_client_vpn_endpoint" "this" {
   description            = var.endpoint_name
-  vpc_id                 = module.test_vpn_vpc.vpc_id
+  vpc_id                 = module.test_vpc.vpc_id
   server_certificate_arn = aws_acm_certificate.this.arn
   client_cidr_block      = var.endpoint_cidr_block
 
@@ -9,7 +9,7 @@ resource "aws_ec2_client_vpn_endpoint" "this" {
   self_service_portal   = "enabled"
   transport_protocol    = "udp"
   security_group_ids    = [aws_security_group.this.id]
-  dns_servers           = [cidrhost(module.test_vpn_vpc.cidr_block, 2)]
+  dns_servers           = [cidrhost(module.test_vpc.cidr_block, 2)]
   
   authentication_options {
     type                           = "federated-authentication"
@@ -34,7 +34,7 @@ resource "aws_ec2_client_vpn_endpoint" "this" {
 # The resources to access through the VPN must be in these subnets.
 #
 data "aws_subnet" "private" {
-  for_each = toset(module.test_vpn_vpc.private_subnet_ids)
+  for_each = toset(module.test_vpc.private_subnet_ids)
   id       = each.key
 }
 
@@ -55,7 +55,7 @@ resource "aws_ec2_client_vpn_network_association" "this_private_subnets" {
 
 resource "aws_ec2_client_vpn_authorization_rule" "this_internal_dns" {
   client_vpn_endpoint_id = aws_ec2_client_vpn_endpoint.this.id
-  target_network_cidr    = "${cidrhost(module.test_vpn_vpc.cidr_block, 2)}/32"
+  target_network_cidr    = "${cidrhost(module.test_vpc.cidr_block, 2)}/32"
   authorize_all_groups   = true
   description            = "Authorization for ${var.endpoint_name} to DNS"
 }
@@ -74,7 +74,7 @@ resource "aws_ec2_client_vpn_authorization_rule" "this_private_subnets" {
 resource "aws_security_group" "this" {
   name        = "client-vpn-endpoint-${var.endpoint_name}"
   description = "Egress All. Used for other groups where VPN access is required."
-  vpc_id      = module.test_vpn_vpc.vpc_id
+  vpc_id      = module.test_vpc.vpc_id
 }
 
 resource "aws_security_group_rule" "egress_all" {
