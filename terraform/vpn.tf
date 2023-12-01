@@ -3,13 +3,14 @@ resource "aws_ec2_client_vpn_endpoint" "this" {
   vpc_id                 = module.test_vpn_vpc.vpc_id
   server_certificate_arn = aws_acm_certificate.this.arn
   client_cidr_block      = var.endpoint_cidr_block
-  self_service_portal    = "enabled"
-  split_tunnel           = true
-  transport_protocol     = "udp"
-  dns_servers            = [cidrhost(module.test_vpn_vpc.cidr_block, 2)]
-  security_group_ids     = [aws_security_group.this.id]
-  session_timeout_hours  = 8
 
+  session_timeout_hours = 8
+  split_tunnel          = true
+  self_service_portal   = "enabled"
+  transport_protocol    = "udp"
+  security_group_ids    = [aws_security_group.this.id]
+  dns_servers           = [cidrhost(module.test_vpn_vpc.cidr_block, 2)]
+  
   authentication_options {
     type                           = "federated-authentication"
     saml_provider_arn              = aws_iam_saml_provider.aws-client-vpn.arn
@@ -28,6 +29,11 @@ resource "aws_ec2_client_vpn_endpoint" "this" {
   }
 }
 
+#
+# Associate subnets and authorize access
+# To save costs, the VPN endpoint is only associated with on availability zone's subnets.
+# The resources to access through the VPN must be in these subnets.
+#
 data "aws_subnet" "private" {
   for_each = toset(module.test_vpn_vpc.private_subnet_ids)
   id       = each.key
@@ -63,6 +69,9 @@ resource "aws_ec2_client_vpn_authorization_rule" "this_private_subnets" {
   description            = "Rule name: ${each.value}"
 }
 
+#
+# VPN security group
+#
 resource "aws_security_group" "this" {
   name        = "client-vpn-endpoint-${var.endpoint_name}"
   description = "Egress All. Used for other groups where VPN access is required."

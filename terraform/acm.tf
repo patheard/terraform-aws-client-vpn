@@ -15,11 +15,7 @@ resource "tls_self_signed_cert" "this" {
   allowed_uses = [
     "key_encipherment",
     "digital_signature",
-    "server_auth",
-    "ipsec_end_system",
-    "ipsec_tunnel",
-    "any_extended",
-    "cert_signing"
+    "client_auth",
   ]
 }
 
