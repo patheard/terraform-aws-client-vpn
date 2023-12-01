@@ -20,7 +20,6 @@ resource "aws_ec2_client_vpn_endpoint" "this" {
   connection_log_options {
     enabled               = true
     cloudwatch_log_group  = aws_cloudwatch_log_group.this.name
-    cloudwatch_log_stream = aws_cloudwatch_log_stream.this.name
   }
 
   client_login_banner_options {
@@ -93,9 +92,4 @@ resource "aws_security_group_rule" "egress_all" {
 resource "aws_cloudwatch_log_group" "this" {
   name              = "/aws/client-vpn-endpoint/${var.endpoint_name}"
   retention_in_days = 14
-}
-
-resource "aws_cloudwatch_log_stream" "this" {
-  log_group_name = aws_cloudwatch_log_group.this.name
-  name           = "connection-log"
 }
