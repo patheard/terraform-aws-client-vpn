@@ -39,7 +39,7 @@ locals {
   }
   availability_zone_subnet_cidr_blocks = {
     for s in data.aws_subnet.private : s.availability_zone => s.cidr_block...
-  }  
+  }
 }
 
 resource "aws_ec2_client_vpn_network_association" "this_private_subnets" {

@@ -13,6 +13,18 @@ variable "endpoint_name" {
   type        = string
 }
 
+variable "postgresql_username" {
+  description = "Postgres root username"
+  type        = string
+  sensitive   = true
+}
+
+variable "postgresql_password" {
+  description = "Postgres root password"
+  type        = string
+  sensitive   = true
+}
+
 variable "region" {
   description = "(Optional) The AWS region to deploy to. Defaults to ca-central-1."
   type        = string
