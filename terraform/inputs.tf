@@ -3,6 +3,11 @@ variable "access_group_id" {
   type        = string
 }
 
+variable "availability_zone" {
+  description = "Availability zone of the subnet to associate with the VPN endpoint."
+  type        = string
+}
+
 variable "endpoint_name" {
   description = "The name of the VPN endpoint to create."
   type        = string
