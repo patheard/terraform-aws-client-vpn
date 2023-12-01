@@ -10,7 +10,9 @@ module "postgresql_cluster" {
   username       = var.postgresql_username
   password       = var.postgresql_password
 
-  security_group_ids = [aws_security_group.postgresql_cluster.id]
+  security_group_ids              = [aws_security_group.postgresql_cluster.id]
+  db_cluster_parameter_group_name = aws_rds_cluster_parameter_group.query_logging.name
+  enabled_cloudwatch_logs_exports = ["postgresql"]
 
   prevent_cluster_deletion = false
   skip_final_snapshot      = true
@@ -23,6 +25,38 @@ module "postgresql_cluster" {
   subnet_ids = module.test_vpn_vpc.private_subnet_ids
 
   billing_tag_value = "platform-core"
+}
+
+resource "aws_rds_cluster_parameter_group" "query_logging" {
+  name        = "aurora-postgresql15-query-logging"
+  family      = "aurora-postgresql15"
+  description = "RDS parameter group to enable query logging"
+
+  parameter {
+    name  = "log_min_error_statement"
+    value = "debug5"
+  }
+
+  parameter {
+    name  = "log_connections"
+    value = "1"
+  }
+
+  parameter {
+    name  = "log_disconnections"
+    value = "1"
+  }
+
+  parameter {
+    name  = "log_statement"
+    value = "mod"
+  }
+
+  parameter {
+    name         = "rds.log_retention_period"
+    value        = "4320" # 3 days (in minutes)
+    apply_method = "pending-reboot"
+  }
 }
 
 resource "aws_security_group" "postgresql_cluster" {
